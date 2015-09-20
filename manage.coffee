@@ -81,6 +81,7 @@ Manage = (@scene) ->
   query = face.SetInput "查询", true
   query.addEventListener "input", ((event) ->
     WsCardFind {query: event.srcElement.value}, (data) ->
+      console.dir data
       t.UpdateQuery data
   ), false
   face.SetButton "退后", (event) ->
@@ -105,9 +106,9 @@ Manage = (@scene) ->
   t = this
   @k = 0
   WsGameGetDeck (d) ->
-    log d
+    #console.dir d
     for k, v of  d
-      log v
+      #console.dir v
       t.AddCards k, v
       t.k = k
     return

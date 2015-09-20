@@ -7,7 +7,7 @@ YGO = (@scene) ->
       if typeof t[e.method] == 'function'
         t[e.method] e.args
       else
-        MsgErr e.method
+        MsgErr "WsGameRegister"
   return
 
 #游戏初始化

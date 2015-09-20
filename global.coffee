@@ -13,8 +13,6 @@ ExitPage = ->
   $('#home').show()
   container.innerHTML = ""
 
-log = (x)->
-  console.dir x
 
 
 String::format = (params)->
