@@ -25,10 +25,6 @@ Face = ->
   @info.className = "phases"
   container.appendChild @info
 
-  @chat = document.createElement('div')
-  @chat.className = "chat"
-  container.appendChild @chat
-
   @mid = document.createElement('div')
   @mid.className = "mid"
   container.appendChild @mid
@@ -68,6 +64,10 @@ Face::InitGame = ()->
   @rs.id = "roundSize"
   @rs.innerText = 0
   @mid.appendChild(@rs)
+
+  @chat = document.createElement('div')
+  @chat.className = "chat"
+  container.appendChild @chat
 
 Face::RoundSize = (i,p) ->
   @rs.innerText = i

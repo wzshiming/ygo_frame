@@ -11,11 +11,7 @@ YGO = (@scene) ->
   return
 
 #游戏初始化
-# index int 玩家自身的索引
-# users []struct {
-#   hp   int
-#   name string
-#}
+
 YGO::init = (args) ->
   @users = args.users
   @index = args.index
