@@ -21,7 +21,7 @@ Manage = (@scene) ->
   @layout.extra.seat = "extra"
   @layout.main = new Vast 0, -2, 0, 10, 15
   @layout.main.seat = "main"
-  @layout.result = new Paging 13, -4, 0, 4, 6, 6
+  @layout.result = new Paging 13, -2, 0, 4, 6, 6
   @layout.result.seat = "result"
   for k,v of @layout
     mouse.Hint v
@@ -37,7 +37,7 @@ Manage = (@scene) ->
       while t.hold.Length() != 0
         c = t.hold.Pop()
         t.layout[c.seat].Push c
-      t.deckname.value = v.name
+      t.deckname.innerText = v.name
     return
   ), false]
   f = (c, rio) ->
@@ -53,31 +53,38 @@ Manage = (@scene) ->
 
   mouse.Drag @layout.side, (c, rio) ->
     if rio == 7
-      $.get("/cards/json/#{c.id}.json", ((data, status)->
-        d = JSON.parse data
-        ty = d["卡片种类"]
+      CardInfo(c, ((d)->
+        ty = d["type"]
         if ty == '融合怪兽' or ty == '仪式怪兽' or ty == '同调怪兽' or ty == 'XYZ怪兽'
           t.layout.extra.Push c
           c.seat = t.layout.extra.seat
         else
           t.layout.main.Push c
           c.seat = t.layout.main.seat
+
       ))
     else if rio == 1
       c.Remove()
   mouse.Drag @layout.result, (c, rio) ->
     if rio == 5
-      $.get("/cards/json/#{c.id}.json", ((data, status)->
-        d = JSON.parse data
-        ty = d["卡片种类"]
+      CardInfo(c, ((d)->
+        ty = d["type"]
         if ty == '融合怪兽' or ty == '仪式怪兽' or ty == '同调怪兽' or ty == 'XYZ怪兽'
           t.AddCard t.layout.extra, c.id, 1, t.layout.extra.seat
         else
           t.AddCard t.layout.main, c.id, 1, t.layout.main.seat
       ))
+  #      $.get("/cards/json/#{c.id}.json", ((data, status)->
+  #        d = JSON.parse data
+  #        ty = d["卡片种类"]
+  #        if ty == '融合怪兽' or ty == '仪式怪兽' or ty == '同调怪兽' or ty == 'XYZ怪兽'
+  #          t.AddCard t.layout.extra, c.id, 1, t.layout.extra.seat
+  #        else
+  #          t.AddCard t.layout.main, c.id, 1, t.layout.main.seat
+  #      ))
 
 
-  @deckname = face.SetInput "卡组名", true
+  @deckname = face.SetHTML " ", " "
   query = face.SetInput "查询", true
   query.addEventListener "input", ((event) ->
     WsCardFind {query: event.srcElement.value}, (data) ->
@@ -87,28 +94,28 @@ Manage = (@scene) ->
   face.SetButton "退后", (event) ->
     ExitPage()
   face.SetButton "保存", (event) ->
-    unless t.decks[t.deckname.value]
-      t.decks[t.deckname.value] = new Pile 19, -4 + t.k * 2, 0
-      t.decks[t.deckname.value].addEventListener t.eve...
+    unless t.decks[t.deckname.innerText]
+      t.decks[t.deckname.innerText] = new Pile 19, -4 + t.k * 2, 0
+      t.decks[t.deckname.innerText].addEventListener t.eve...
       t.k++
     WsGameSetDeck
       main: getCardsSize t.layout.main
       extra: getCardsSize t.layout.extra
       side: getCardsSize t.layout.side
-      name: t.deckname.value
-    t.layout.side.MoveTo t.decks[t.deckname.value]
-    t.layout.extra.MoveTo t.decks[t.deckname.value]
-    t.layout.main.MoveTo t.decks[t.deckname.value]
+      name: t.deckname.innerText
+    t.layout.side.MoveTo t.decks[t.deckname.innerText]
+    t.layout.extra.MoveTo t.decks[t.deckname.innerText]
+    t.layout.main.MoveTo t.decks[t.deckname.innerText]
     t.hold = null
-    t.deckname.value = ""
+    t.deckname.innerText = " "
   @decks = {}
   @deck = {}
   t = this
   @k = 0
   WsGameGetDeck (d) ->
-    #console.dir d
+#console.dir d
     for k, v of  d
-      #console.dir v
+#console.dir v
       t.AddCards k, v
       t.k = k
     return

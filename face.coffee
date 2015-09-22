@@ -144,14 +144,17 @@ Face::SetHTML = (name = null, value = null) ->
         delete @infos[name]
       @info.appendChild value
       @infos[name] = value
+      return value
     else
       unless @infos[name]
         @infos[name] = document.createElement('p')
         @info.appendChild @infos[name]
       @infos[name].innerHTML = "#{name}: #{value}"
+      return @infos[name]
   else if @infos[name]
     @info.removeChild @infos[name]
     delete @infos[name]
+    return
   return
 
 Face::ShowCard = (c) ->
